@@ -1,7 +1,6 @@
 /**
  * Created by Chen on 2016-08-24.
  */
-import deepFreeze from 'deep-freeze';
 import {createStore} from 'redux';
 
 const todo = (state, action) => {
@@ -25,7 +24,7 @@ const todo = (state, action) => {
   }
 };
 
-const reducer = (state = [], action)=> {
+const todos = (state = [], action)=> {
   switch (action.type) {
     case "ADD_TODO":
       return [
@@ -51,8 +50,8 @@ const reducer = (state = [], action)=> {
   }
 };
 
-const visibilityFilter = (state="SHOW_ALL", action)=>{
-  switch(action.type) {
+const visibilityFilter = (state = "SHOW_ALL", action)=> {
+  switch (action.type) {
     case "SET_VISIBILITY_FILTER":
       return action.filter;
     default:
@@ -60,9 +59,9 @@ const visibilityFilter = (state="SHOW_ALL", action)=>{
   }
 };
 
-const todoApp = (state = {}, action)=>{
+const todoApp = (state = {}, action)=> {
   return {
-    todos: reducer(
+    todos: todos(
         state.todos,
         action
     ),
@@ -75,128 +74,96 @@ const todoApp = (state = {}, action)=>{
 
 let store = createStore(todoApp);
 
-describe("todo", ()=>{
-  it("add a new todo to the list", ()=>{
-    let stateAfter = {
-      todos: [{
-        id: 0,
-        text: "Learn Redux",
-        completed: false,
-      }],
-      filter: "SHOW_ALL"
-    };
-    
-    store.dispatch({
-      type: "ADD_TODO",
-      id: 0,
-      text: "Learn Redux",
-    });
-    
-    expect(store.getState()).toEqual(stateAfter);
-  });
-});
-
-
-/*
 describe("todo", ()=> {
-  // let store = createStore()
   it("add a new todo to the list", ()=> {
-    let stateBefore = [],
-        action = {
+    let action = {
           type: "ADD_TODO",
           id: 0,
           text: "Learn Redux",
         },
-        stateAfter = [{
-          id: 0,
-          text: "Learn Redux",
-          completed: false,
-        }];
+        stateAfter = {
+          todos: [{
+            id: 0,
+            text: "Learn Redux",
+            completed: false,
+          }],
+          filter: "SHOW_ALL"
+        };
     
-    deepFreeze(stateBefore);
-    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+    store.dispatch(action);
+    
+    expect(store.getState()).toEqual(stateAfter);
   });
   
-  it("Unsuccesssfully remove a todo which is not completed", ()=> {
-    let stateBefore = [{
-          id: 0,
-          text: "Learn Redux",
-          completed: false,
-        }],
-        action = {
-          type: "DELETE_TODO",
-          id: 0,
+  it("Add another new todo to the list", ()=> {
+    let action = {
+          type: "ADD_TODO",
+          id: 1,
+          text: "Redux is Fun",
         },
-        stateAfter = [{
-          id: 0,
-          text: "Learn Redux",
-          completed: false,
-        }];
+        stateAfter = {
+          todos: [{
+            id: 0,
+            text: "Learn Redux",
+            completed: false,
+          }, {
+            id: 1,
+            text: "Redux is Fun",
+            completed: false,
+          }],
+          filter: "SHOW_ALL"
+        };
     
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+    store.dispatch(action);
+    
+    expect(store.getState()).toEqual(stateAfter);
   });
   
-  it("Successfully remove a todo which is completed", ()=> {
-    let stateBefore = [{
-          id: 0,
-          text: "Learn Redux",
-          completed: true,
-        }, {
-          id: 1,
-          text: "Redux is Fun",
-          completed: false,
-        }],
-        action = {
-          type: "DELETE_TODO",
-          id: 0,
-        },
-        stateAfter = [{
-          id: 1,
-          text: "Redux is Fun",
-          completed: false,
-        }];
-    
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-    expect(reducer(stateBefore, action)).toEqual(stateAfter);
-  });
-  
-  it("Toggle a todo's state of completion from true to false", ()=> {
-    let stateBefore = [{
-          id: 0,
-          text: "Learn Redux",
-          completed: true,
-        }, {
-          id: 1,
-          text: "Redux is Fun",
-          completed: true,
-        }],
-        action = {
+  it("Toggle a todo's state of completion from false to true", ()=> {
+    let action = {
           type: "TOGGLE_TODO",
-          id: 1
-        },
-        stateAfter = [{
           id: 0,
-          text: "Learn Redux",
-          completed: true,
-        }, {
-          id: 1,
-          text: "Redux is Fun",
-          completed: false,
-        }];
+        },
+        stateAfter = {
+          todos: [{
+            id: 0,
+            text: "Learn Redux",
+            completed: true,
+          }, {
+            id: 1,
+            text: "Redux is Fun",
+            completed: false,
+          }],
+          filter: "SHOW_ALL"
+        };
     
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-    
-    expect(reducer(stateBefore, action)).toEqual(stateAfter);
-  })
+    store.dispatch(action);
+    expect(store.getState()).toEqual(stateAfter);
+  });
 });
-*/
 
-
-
-
+describe("filter", ()=> {
+  it("Change the filter to 'SHOW_COMPLETED'", ()=> {
+    let action = {
+          type: "SET_VISIBILITY_FILTER",
+          filter: "SHOW_COMPLETED"
+        },
+        stateAfter = {
+          todos: [{
+            id: 0,
+            text: "Learn Redux",
+            completed: true,
+          }, {
+            id: 1,
+            text: "Redux is Fun",
+            completed: false,
+          }],
+          filter: "SHOW_COMPLETED"
+        };
+    
+    store.dispatch(action);
+    expect(store.getState()).toEqual(stateAfter);
+  });
+});
 
 
