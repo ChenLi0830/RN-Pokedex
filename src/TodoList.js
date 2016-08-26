@@ -62,11 +62,17 @@ export default class TodoList extends Component {
           Show:
         </Text>
         <FilterLink text = "All"
-                    whenSetFilter = {()=>this.props.whenSetFilter("SHOW_ALL")}/>
+                    currentFilter = {this.props.filter}
+                    filter = {"SHOW_ALL"}
+                    whenSetFilter = {(filter)=>this.props.whenSetFilter(filter)}/>
         <FilterLink text = "Active"
-                    whenSetFilter = {()=>this.props.whenSetFilter("SHOW_ACTIVE")}/>
+                    currentFilter = {this.props.filter}
+                    filter = {"SHOW_ACTIVE"}
+                    whenSetFilter = {(filter)=>this.props.whenSetFilter(filter)}/>
         <FilterLink text = "Completed"
-                    whenSetFilter = {()=>this.props.whenSetFilter("SHOW_COMPLETED")}/>
+                    currentFilter = {this.props.filter}
+                    filter = {"SHOW_COMPLETED"}
+                    whenSetFilter = {(filter)=>this.props.whenSetFilter(filter)}/>
       </View>
     
     </View>
