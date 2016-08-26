@@ -16,7 +16,7 @@ import {createStore} from "redux";
 let store = createStore(counter);
 
 store.subscribe(()=>{
-  console.warn("Application state is updated:", store.getState());
+  // console.warn("Application state is updated:", store.getState());
 });
 
 // setInterval(()=>{

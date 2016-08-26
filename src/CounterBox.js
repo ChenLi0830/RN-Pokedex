@@ -9,10 +9,6 @@ export default class CounterBox extends React.Component {
     super(props);
   }
   
-  buttonClicked(){
-    console.warn("button clicked!");
-  }
-  
   render() {
     return (
     <View>

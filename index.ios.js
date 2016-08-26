@@ -3,29 +3,24 @@
  * https://github.com/facebook/react-native
  * @flow
  */
-import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-import reducer from "./src/todoApp";
-import TodoList from "./src/TodoList";
-import {createStore} from "redux";
+import React, {Component} from 'react';
+import {AppRegistry, StyleSheet, Text, View} from 'react-native';
+import reducer from './src/todoApp';
+import TodoList from './src/TodoList';
+import {createStore} from 'redux';
 let store = createStore(reducer);
 let nextTodoID = 0;
 
 class RN_Redux extends Component {
   
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       todos: store.getState().todos,
       filter: store.getState().filter,
     };
-  
-    store.subscribe(()=>{
+    
+    store.subscribe(()=> {
       this.setState({
         todos: store.getState().todos,
         filter: store.getState().filter,
@@ -33,8 +28,8 @@ class RN_Redux extends Component {
     });
   }
   
-  componentDidMount(){
-    store.subscribe(()=>{
+  componentDidMount() {
+    store.subscribe(()=> {
       this.setState({
         todos: store.getState().todos,
         filter: store.getState().filter,
@@ -44,31 +39,39 @@ class RN_Redux extends Component {
   
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-        <TodoList todos = {this.state.todos}
-                  onAdd = {(text)=>store.dispatch({
-                    type:"ADD_TODO",
-                    id:nextTodoID++,
-                    text: text
-                  })}
-        />
+        <View style={styles.container}>
+          <Text style={styles.welcome}>
+            Welcome to React Native!
+          </Text>
+          <Text style={styles.instructions}>
+            To get started, edit index.ios.js
+          </Text>
+          <Text style={styles.instructions}>
+            Press Cmd+R to reload,{'\n'}
+            Cmd+D or shake for dev menu
+          </Text>
+          <TodoList {...this.state}
+                    whenAddNew={(text)=>store.dispatch({
+                      type: "ADD_TODO",
+                      id: nextTodoID++,
+                      text: text
+                    })}
+                    whenToggled={(id)=> store.dispatch({
+                      type: "TOGGLE_TODO",
+                      id: id,
+                    })}
+                    whenSetFilter={(filter)=> store.dispatch({
+                      type: "SET_VISIBILITY_FILTER",
+                      filter: filter
+                    })}
+          />
+          
+          {/*<CounterBox value = {this.state.value}
+           onIncrement = {()=>store.dispatch({type: "INCREMENT"})}
+           onDecrement = {()=>store.dispatch({type: "DECREMENT"})}
+           />*/}
         
-        {/*<CounterBox value = {this.state.value}
-                    onIncrement = {()=>store.dispatch({type: "INCREMENT"})}
-                    onDecrement = {()=>store.dispatch({type: "DECREMENT"})}
-        />*/}
-        
-      </View>
+        </View>
     );
   }
 }
