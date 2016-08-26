@@ -10,22 +10,35 @@ import {
   Text,
   View
 } from 'react-native';
-import CounterBox from "./src/CounterBox";
-import counter from './src/counter';
+import reducer from "./src/todoApp";
+import TodoList from "./src/TodoList";
 import {createStore} from "redux";
-let store = createStore(counter);
+let store = createStore(reducer);
+let nextTodoID = 0;
+
 class RN_Redux extends Component {
   
   constructor(props){
     super(props);
     this.state = {
-      value:0
-    }
+      todos: store.getState().todos,
+      filter: store.getState().filter,
+    };
+  
+    store.subscribe(()=>{
+      this.setState({
+        todos: store.getState().todos,
+        filter: store.getState().filter,
+      });
+    });
   }
   
   componentDidMount(){
     store.subscribe(()=>{
-      this.setState({value: store.getState()});
+      this.setState({
+        todos: store.getState().todos,
+        filter: store.getState().filter,
+      });
     });
   }
   
@@ -42,10 +55,19 @@ class RN_Redux extends Component {
           Press Cmd+R to reload,{'\n'}
           Cmd+D or shake for dev menu
         </Text>
-        <CounterBox value = {this.state.value}
+        <TodoList todos = {this.state.todos}
+                  onAdd = {(text)=>store.dispatch({
+                    type:"ADD_TODO",
+                    id:nextTodoID++,
+                    text: text
+                  })}
+        />
+        
+        {/*<CounterBox value = {this.state.value}
                     onIncrement = {()=>store.dispatch({type: "INCREMENT"})}
                     onDecrement = {()=>store.dispatch({type: "DECREMENT"})}
-        />
+        />*/}
+        
       </View>
     );
   }
