@@ -3,19 +3,26 @@
  */
 import React, {Component} from 'react';
 import {TouchableHighlight, Text} from 'react-native';
-export default class FilterLink extends Component {
-  render() {
-    if (this.props.filter === this.props.currentFilter)
-      return <Text style={{fontWeight:"bold"}}>
-        {this.props.text}
-      </Text>;
-    
-    return <TouchableHighlight>
-      <Text onPress={()=> {
-        this.props.whenSetFilter(this.props.filter)
-      }}>
-        {this.props.text}
-      </Text>
-    </TouchableHighlight>
+
+const FilterLink = ({text, filter, currentFilter, whenSetFilter}) => {
+  if (filter === currentFilter) {
+    return (
+        <Text style={{fontWeight: "bold"}}>
+          {text}
+        </Text>
+    )
+  }
+  else {
+    return (
+        <TouchableHighlight>
+          <Text onPress={()=> {
+            whenSetFilter(filter)
+          }}>
+            {text}
+          </Text>
+        </TouchableHighlight>
+    )
   }
 };
+
+export default FilterLink;

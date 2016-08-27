@@ -4,9 +4,10 @@
  * @flow
  */
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View} from 'react-native';
+import {AppRegistry, StyleSheet, Text, View, TextInput,TouchableHighlight} from 'react-native';
 import reducer from './src/todoApp';
 import TodoList from './src/TodoList';
+import FilterList from './src/FilterList';
 import {createStore} from 'redux';
 let store = createStore(reducer);
 let nextTodoID = 0;
@@ -16,61 +17,57 @@ class RN_Redux extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      todos: store.getState().todos,
-      filter: store.getState().filter,
+      ...store.getState(),
+      text: "",
     };
-    
-    store.subscribe(()=> {
-      this.setState({
-        todos: store.getState().todos,
-        filter: store.getState().filter,
-      });
-    });
-  }
   
-  componentDidMount() {
     store.subscribe(()=> {
-      this.setState({
-        todos: store.getState().todos,
-        filter: store.getState().filter,
-      });
+      this.setState(store.getState());
     });
   }
   
   render() {
     return (
         <View style={styles.container}>
-          <Text style={styles.welcome}>
-            Welcome to React Native!
-          </Text>
-          <Text style={styles.instructions}>
-            To get started, edit index.ios.js
-          </Text>
-          <Text style={styles.instructions}>
-            Press Cmd+R to reload,{'\n'}
-            Cmd+D or shake for dev menu
-          </Text>
+          
+          <View>
+            <TextInput
+                value={this.state.text}
+                onChangeText={text=>this.setState({text})}
+                style={{height: 40, borderColor: 'gray', width: 150}}
+                placeholder="Add new todo task">
+            </TextInput>
+  
+            <TouchableHighlight onPress={()=> {
+              store.dispatch({
+                type: "ADD_TODO",
+                id: nextTodoID++,
+                text: this.state.text
+              });
+              this.setState({text:""});
+            }}>
+              <Text style={styles.btnStyle}>
+                Add
+              </Text>
+            </TouchableHighlight>
+          </View>
+          
           <TodoList {...this.state}
-                    whenAddNew={(text)=>store.dispatch({
-                      type: "ADD_TODO",
-                      id: nextTodoID++,
-                      text: text
-                    })}
                     whenToggled={(id)=> store.dispatch({
                       type: "TOGGLE_TODO",
                       id: id,
                     })}
-                    whenSetFilter={(filter)=> store.dispatch({
-                      type: "SET_VISIBILITY_FILTER",
-                      filter: filter
-                    })}
+          />
+  
+          <FilterList filter = {this.state.filter}
+                      whenSetFilter = {(filter)=> {
+                        store.dispatch({
+                          type: "SET_VISIBILITY_FILTER",
+                          filter: filter
+                        })}
+                      }
           />
           
-          {/*<CounterBox value = {this.state.value}
-           onIncrement = {()=>store.dispatch({type: "INCREMENT"})}
-           onDecrement = {()=>store.dispatch({type: "DECREMENT"})}
-           />*/}
-        
         </View>
     );
   }
@@ -82,16 +79,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });
 
