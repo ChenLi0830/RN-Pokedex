@@ -7,7 +7,7 @@ import React, {Component} from 'react';
 import {AppRegistry, StyleSheet, Text, View, TextInput,TouchableHighlight} from 'react-native';
 import reducer from './src/todoApp';
 import TodoList from './src/TodoList';
-import FilterList from './src/FilterList';
+import Footer from './src/Footer';
 import {createStore} from 'redux';
 let store = createStore(reducer);
 let nextTodoID = 0;
@@ -17,16 +17,23 @@ class RN_Redux extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...store.getState(),
       text: "",
     };
+  }
   
-    store.subscribe(()=> {
+  componentDidMount(){
+    this._unsubscribe = store.subscribe(()=> {
       this.setState(store.getState());
     });
   }
   
+  componentWillUnmount(){
+    this._unsubscribe();
+  }
+  
   render() {
+    const state = {...store.getState()};
+        
     return (
         <View style={styles.container}>
           
@@ -52,21 +59,14 @@ class RN_Redux extends Component {
             </TouchableHighlight>
           </View>
           
-          <TodoList {...this.state}
+          <TodoList {...state}
                     whenToggled={(id)=> store.dispatch({
                       type: "TOGGLE_TODO",
                       id: id,
                     })}
           />
   
-          <FilterList filter = {this.state.filter}
-                      whenSetFilter = {(filter)=> {
-                        store.dispatch({
-                          type: "SET_VISIBILITY_FILTER",
-                          filter: filter
-                        })}
-                      }
-          />
+          <Footer />
           
         </View>
     );
@@ -83,3 +83,6 @@ const styles = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('RN_Redux', () => RN_Redux);
+
+
+export default store;
