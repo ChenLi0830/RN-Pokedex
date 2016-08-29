@@ -3,9 +3,9 @@
  */
 import React, {Component, PropTypes} from 'react';
 import Link from './Link';
-import store from '../index.ios';
 class FilterLink extends Component {
   componentWillMount() {
+    const {store} = this.context;
     this._unsubscribe = store.subscribe(() =>
         this.forceUpdate()
     )
@@ -16,6 +16,7 @@ class FilterLink extends Component {
   }
   
   render() {
+    const {store} = this.context;
     const props = this.props;
     const state = store.getState();
     
@@ -35,6 +36,10 @@ class FilterLink extends Component {
 
 FilterLink.propTypes = {
   filter: PropTypes.string
+};
+
+FilterLink.contextTypes = {
+  store: PropTypes.object
 };
 
 export default FilterLink;

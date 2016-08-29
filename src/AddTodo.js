@@ -3,7 +3,6 @@
  */
 import React, {Component, PropTypes} from 'react';
 import {View, Text, TextInput, TouchableHighlight} from 'react-native';
-import store from '../index.ios';
 
 let nextTodoID = 0;
 
@@ -14,6 +13,8 @@ class AddTodo extends Component {
   }
   
   render() {
+    let {store} = this.context;
+    
     return <View>
       <TextInput
           value={this.state.text}
@@ -40,16 +41,15 @@ class AddTodo extends Component {
   }
 }
 
+AddTodo.contextTypes = {
+  store: PropTypes.object
+};
+
 let styles = {
   btnStyle: {
     backgroundColor: "lightblue",
     textAlign: "center",
   }
-};
-
-AddTodo.propTypes = {
-  text: PropTypes.string,
-  whenChangeText: PropTypes.func
 };
 
 export default AddTodo;

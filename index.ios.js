@@ -7,25 +7,25 @@ import React, {Component} from 'react';
 import {AppRegistry, StyleSheet, View} from 'react-native';
 import reducer from './src/todoApp';
 import {createStore} from 'redux';
-let store = createStore(reducer);
-
+import Provider from './src/Provider';
 import TodoList from './src/TodoList';
 import Footer from './src/Footer';
 import AddTodo from './src/AddTodo';
 
-
 class RN_Redux extends Component {
   render() {
     return (
-        <View style={styles.container}>
+        <Provider store = {createStore(reducer)}>
+          <View style={styles.container}>
+            
+            <AddTodo />
+            
+            <TodoList />
+            
+            <Footer />
           
-          <AddTodo />
-          
-          <TodoList />
-          
-          <Footer />
-        
-        </View>
+          </View>
+        </Provider>
     );
   }
 }
@@ -41,4 +41,3 @@ const styles = StyleSheet.create({
 
 AppRegistry.registerComponent('RN_Redux', () => RN_Redux);
 
-export default store;

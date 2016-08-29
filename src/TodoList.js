@@ -3,7 +3,6 @@
  */
 import React, {Component, PropTypes} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import store from '../index.ios';
 
 const Todo = ({id, completed, text, whenToggled}) => (
     <Text onPress={()=> whenToggled(id)}
@@ -25,6 +24,7 @@ const getVisibleTodos = (todos, filter)=> {
 
 class TodoList extends Component {
   componentWillMount() {
+    const {store} = this.context;
     this._unsubscribe = store.subscribe(()=>
       this.forceUpdate()
     );
@@ -35,9 +35,9 @@ class TodoList extends Component {
   }
   
   render() {
-    let state = store.getState();
-    
-    let visibleTodos = getVisibleTodos(state.todos, state.filter);
+    let {store} = this.context,
+        state = store.getState(),
+        visibleTodos = getVisibleTodos(state.todos, state.filter);
     
     return <View>
       {visibleTodos.map(todo=>
@@ -72,4 +72,12 @@ TodoList.propTypes = {
   whenToggled: PropTypes.func,
 };
 
+TodoList.contextTypes = {
+  store: PropTypes.object
+};
+
 export default TodoList;
+
+
+
+
