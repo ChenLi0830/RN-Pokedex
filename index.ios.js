@@ -7,7 +7,8 @@ import React, {Component} from 'react';
 import {AppRegistry, StyleSheet, View} from 'react-native';
 import reducer from './src/todoApp';
 import {createStore} from 'redux';
-import Provider from './src/Provider';
+import {Provider} from 'react-redux';
+
 import TodoList from './src/TodoList';
 import Footer from './src/Footer';
 import AddTodo from './src/AddTodo';
