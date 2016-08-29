@@ -1,7 +1,7 @@
 /**
  * Created by Chen on 2016-08-26.
  */
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import Link from './Link';
 import store from '../index.ios';
 class FilterLink extends Component {
@@ -32,5 +32,9 @@ class FilterLink extends Component {
     </Link>
   }
 }
+
+FilterLink.propTypes = {
+  filter: PropTypes.string
+};
 
 export default FilterLink;

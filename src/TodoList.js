@@ -1,11 +1,19 @@
 /**
  * Created by Chen on 2016-08-26.
  */
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import store from '../index.ios';
 
-const getVisibleTodos = (todos, filter)=>{
-  switch(filter){
+const Todo = ({id, completed, text, whenToggled}) => (
+    <Text onPress={()=> whenToggled(id)}
+          style={[styles.textBase, completed && styles.textDeleted]}>
+      {text}
+    </Text>
+);
+
+const getVisibleTodos = (todos, filter)=> {
+  switch (filter) {
     case "SHOW_ALL":
       return todos;
     case "SHOW_ACTIVE":
@@ -15,24 +23,36 @@ const getVisibleTodos = (todos, filter)=>{
   }
 };
 
-const Todo = ({id, completed, text, whenToggled}) => (
-    <Text onPress={()=> whenToggled(id)}
-          style={[styles.textBase, completed && styles.textDeleted]}>
-      {text}
-    </Text>
-);
-
-const TodoList = ({todos, filter, whenToggled}) => {
-    let visibleTodos = getVisibleTodos(todos, filter);
+class TodoList extends Component {
+  componentWillMount() {
+    this._unsubscribe = store.subscribe(()=>
+      this.forceUpdate()
+    );
+  }
+  
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+  
+  render() {
+    let state = store.getState();
+    
+    let visibleTodos = getVisibleTodos(state.todos, state.filter);
     
     return <View>
       {visibleTodos.map(todo=>
           <Todo key={todo.id}
                 {...todo}
-                whenToggled = {whenToggled}
+                whenToggled={()=>
+                    store.dispatch({
+                      type: "TOGGLE_TODO",
+                      id: todo.id,
+                    })
+                }
           />
-        )}
+      )}
     </View>
+  }
 }
 
 let styles = StyleSheet.create({
@@ -44,10 +64,12 @@ let styles = StyleSheet.create({
     color: "red",
     textDecorationLine: "line-through"
   },
-  btnStyle: {
-    backgroundColor: "lightblue",
-    textAlign: "center",
-  }
 });
+
+TodoList.propTypes = {
+  todos: PropTypes.array,
+  filter: PropTypes.string,
+  whenToggled: PropTypes.func,
+};
 
 export default TodoList;
