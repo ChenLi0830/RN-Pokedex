@@ -3,6 +3,7 @@
  */
 import React, {Component, PropTypes} from 'react';
 import {View, Text, TextInput, TouchableHighlight} from 'react-native';
+import {connect} from "react-redux";
 
 let nextTodoID = 0;
 
@@ -13,8 +14,6 @@ class AddTodo extends Component {
   }
   
   render() {
-    let {store} = this.context;
-    
     return <View>
       <TextInput
           value={this.state.text}
@@ -26,7 +25,7 @@ class AddTodo extends Component {
       </TextInput>
       
       <TouchableHighlight onPress={()=> {
-        store.dispatch({
+        this.props.dispatch({
           type: "ADD_TODO",
           id: nextTodoID++,
           text: this.state.text
@@ -41,15 +40,13 @@ class AddTodo extends Component {
   }
 }
 
-AddTodo.contextTypes = {
-  store: PropTypes.object
-};
-
 let styles = {
   btnStyle: {
     backgroundColor: "lightblue",
     textAlign: "center",
   }
 };
+
+AddTodo = connect()(AddTodo);
 
 export default AddTodo;

@@ -12,15 +12,14 @@ const Todo = ({id, completed, text, whenToggled}) => (
 );
 
 let styles = StyleSheet.create({
-    textBase: {
-        fontSize: 12,
-        color: "#333"
-    },
-    textDeleted: {
-        color: "red",
-        textDecorationLine: "line-through"
-    },
+  textBase: {
+    fontSize: 12,
+    color: "#333"
+  },
+  textDeleted: {
+    color: "red",
+    textDecorationLine: "line-through"
+  },
 });
-
 
 export default Todo;
